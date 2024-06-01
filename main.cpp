@@ -91,13 +91,13 @@ Interval input_single_variable_I(const char variable) {
 
 int main()
 {
-
     vector<long double> input_polynomial = input_single_interval_polynomial();
 
     vector<Interval> input_polynomial_I = createIntervals(input_polynomial);
 
-    // Set precision for display
-    cout << std::setprecision(21);
+    vector<long double>().swap(input_polynomial);
+
+    cout << std::setprecision(21);  // Set the precision to 21 decimal places
 
     print_interval_I(input_polynomial_I);
 
