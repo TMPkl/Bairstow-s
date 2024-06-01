@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1717239822 source:/home/lkarol/eanl/precision.cpp
+	<iostream>
+	<boost/numeric/interval.hpp>
+	<iomanip>
+	<limits>
+
+1717241562 source:/home/lkarol/eanl/main.cpp
+	<iostream>
+	<vector>
+	<boost/numeric/interval.hpp>
+	<iomanip>
+	<limits>
+
