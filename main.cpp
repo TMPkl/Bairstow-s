@@ -39,7 +39,7 @@ vector<long double> input_single_interval_polynomial() {
 
 void print_interval(const vector<Interval>& intervals) {
     for (const auto& interval : intervals) {
-        cout << "Interval: [" << interval.lower() << ", " << interval.upper() << "]" << endl<<scientific;
+        cout <<"[" << interval.lower() << ", " << interval.upper() << "]" << endl<<scientific;
     }
 }
 
@@ -77,17 +77,18 @@ bool interval_includes_zero(const Interval& interval) {
     return interval.lower() <= 0 && interval.upper() >= 0;
 }
 
-int main() {
+void BarSInterval() {
     vector<long double> input_polynomial = input_single_interval_polynomial();
     vector<Interval> input_polynomial_I = createIntervals(input_polynomial);
 
-    cout << std::setprecision(21); << scientific;  // Set the precision to 21 decimal places
+    cout << std::setprecision(21) << scientific;  // Set the precision to 21 decimal places
 
     Interval u = input_single_variable_I('u');
     Interval v = input_single_variable_I('v');
 
     vector<Interval> b;
     vector<Interval> c;
+
 
     while (true) {
         size_t degree = input_polynomial_I.size() - 1;
@@ -107,38 +108,37 @@ int main() {
                 Interval sqrt_delta = sqrt(Interval(delta));
                 Interval root1 = (-input_polynomial_I[1] - sqrt_delta) / (Interval(2.0) * input_polynomial_I[0]);
                 Interval root2 = (-input_polynomial_I[1] + sqrt_delta) / (Interval(2.0) * input_polynomial_I[0]);
-                cout << "The polynomial is of degree 2. The 2 distinct roots: ";
+                //cout << "The polynomial is of degree 2. The 2 distinct roots: ";
                 print_interval({root1});
                 print_interval({root2});
             } else if (delta == 0) {
                 Interval root = -input_polynomial_I[1] / (Interval(2.0) * input_polynomial_I[0]);
-                cout << "The polynomial is of degree 2. The 2 same roots: ";
+                //cout << "The polynomial is of degree 2. The 2 same roots: ";
                 print_interval({root});
             } else {
                 Interval root1real = -input_polynomial_I[1] / (Interval(2.0) * input_polynomial_I[0]);
                 Interval root1imaginary = sqrt(Interval(-delta)) / (Interval(2.0) * input_polynomial_I[0]);
                 Interval root2real = root1real;
                 Interval root2imaginary = -root1imaginary;
-                cout << "The polynomial is of degree 2. The 2 complex roots: ";
-                cout << "Root 1: [" << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
-                cout << "Root 2: [" << root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
+                //cout << "The polynomial is of degree 2. The 2 complex roots: ";
+                cout << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
+                cout << root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
             }
             break;
         } else {
             b = synthetic_division_I(input_polynomial_I, u, v);
      
             if (interval_includes_zero(b[b.size()-1]) && interval_includes_zero(b[b.size()-2])) {
-                cout << "Last 2 coefficients are zero." << endl;
+                //cout << "Last 2 coefficients are zero." << endl;
 
                 if (u.lower()*u.lower() + 4*v.lower() < 0)
                 {
-                    cout << "2 complex roots: ";
                     Interval root1real = -u / (Interval(2.0,2.0));
                     Interval root1imaginary = sqrt(-u*u - Interval(4.0,4.0)*v) / (Interval(2.0,2.0));
                     Interval root2real = root1real;
                     Interval root2imaginary = -root1imaginary;
-                    cout << "Root 1: [" << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
-                    cout << "Root 2: [" << root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
+                    cout << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
+                    cout <<  root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
                     input_polynomial_I = vector<Interval>(b.begin(), b.end() - 2);
 
                 }
@@ -148,7 +148,9 @@ int main() {
                     Interval root1 = (u + sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
                     Interval root2 = (u - sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
                     cout << "The 2 roots are: \n";
+                    cout << "root 1:";
                     print_interval({root1});
+                    cout << "root 2:";
                     print_interval({root2});
                     input_polynomial_I = vector<Interval>(b.begin(), b.end() - 2);
 
@@ -171,5 +173,9 @@ int main() {
             }
         }
     }
+}
+
+int main(){
+    BarSInterval();
     return 0;
 }
