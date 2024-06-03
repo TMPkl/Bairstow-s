@@ -83,8 +83,8 @@ void BarSInterval() {
 
     cout << std::setprecision(21) << scientific;  // Set the precision to 21 decimal places
 
-    Interval u = input_single_variable_I('u');
-    Interval v = input_single_variable_I('v');
+    Interval u = interval<long double>(2.0, 2.0);
+    Interval v = interval<long double>(-10.0, -10.0);
 
     vector<Interval> b;
     vector<Interval> c;
@@ -93,10 +93,10 @@ void BarSInterval() {
     while (true) {
         size_t degree = input_polynomial_I.size() - 1;
         if (degree == 0) {
-            cout << "The polynomial is of degree 0." << endl;
+            //cout << "The polynomial is of degree 0." << endl;
             break;
         } else if (degree == 1) {
-            cout << "The polynomial is of degree 1. The root is: " << -input_polynomial_I[1].lower() / input_polynomial_I[0].lower() << endl;
+            cout << -input_polynomial_I[1].lower() / input_polynomial_I[0].lower() << endl;
             break;
         } else if (degree == 2) {
             long double a = input_polynomial_I[0].lower();
@@ -114,6 +114,7 @@ void BarSInterval() {
             } else if (delta == 0) {
                 Interval root = -input_polynomial_I[1] / (Interval(2.0) * input_polynomial_I[0]);
                 //cout << "The polynomial is of degree 2. The 2 same roots: ";
+                print_interval({root});
                 print_interval({root});
             } else {
                 Interval root1real = -input_polynomial_I[1] / (Interval(2.0) * input_polynomial_I[0]);
@@ -144,13 +145,13 @@ void BarSInterval() {
                 }
                 else 
                 {
-                    cout << "2 real roots: ";
+                    //cout << "2 real roots: ";
                     Interval root1 = (u + sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
                     Interval root2 = (u - sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
-                    cout << "The 2 roots are: \n";
-                    cout << "root 1:";
+                    //cout << "The 2 roots are: \n";
+                    //cout << "root 1:";
                     print_interval({root1});
-                    cout << "root 2:";
+                    //cout << "root 2:";
                     print_interval({root2});
                     input_polynomial_I = vector<Interval>(b.begin(), b.end() - 2);
 
@@ -174,6 +175,7 @@ void BarSInterval() {
         }
     }
 }
+
 
 int main(){
     BarSInterval();
