@@ -39,7 +39,7 @@ vector<long double> input_single_interval_polynomial() {
 
 void print_interval(const vector<Interval>& intervals) {
     for (const auto& interval : intervals) {
-        cout << "Interval: [" << interval.lower() << ", " << interval.upper() << "]" << endl;
+        cout << "Interval: [" << interval.lower() << ", " << interval.upper() << "]" << endl<<scientific;
     }
 }
 
@@ -81,7 +81,7 @@ int main() {
     vector<long double> input_polynomial = input_single_interval_polynomial();
     vector<Interval> input_polynomial_I = createIntervals(input_polynomial);
 
-    cout << std::setprecision(21);  // Set the precision to 21 decimal places
+    cout << std::setprecision(21); << scientific;  // Set the precision to 21 decimal places
 
     Interval u = input_single_variable_I('u');
     Interval v = input_single_variable_I('v');
