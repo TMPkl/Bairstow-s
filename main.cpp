@@ -16,10 +16,14 @@ vector<Interval> createIntervals(const vector<long double>& input_polynomial) {
     for (const auto& val : input_polynomial) {
         long double lower = std::nextafter(val, -numeric_limits<long double>::infinity());
         long double upper = std::nextafter(val, numeric_limits<long double>::infinity());
+        if (lower > upper) {
+            std::swap(lower, upper); // Ensure lower is always less than or equal to upper
+        }
         intervals.emplace_back(lower, upper);
     }
     return intervals;
 }
+
 
 vector<long double> input_single_interval_polynomial() {
     cout << "Enter the values of the coefficients starting from X^n to X^0. Enter any other character to stop." << endl;
@@ -92,6 +96,7 @@ int main() {
     cout << "v = [" << v.lower() << ", " << v.upper() << "]" << endl;
 
     while (true) {
+        cout<< "debug 1 "<<endl;
         if (input_polynomial_I.size() == 1) {
             cout << "The polynomial is of degree 0." << endl;
             break;
@@ -99,12 +104,16 @@ int main() {
             cout << "The polynomial is of degree 1. The root is: " << -input_polynomial_I[1].lower() / input_polynomial_I[0].lower() << endl;
             break;
         } else if (input_polynomial_I.size() == 3) {
+            cout<< "debug 2 "<<endl;
+
             long double a = input_polynomial_I[0].lower();
             long double b = input_polynomial_I[1].lower();
             long double c = input_polynomial_I[2].lower();
             long double delta_lower = b * b - 4 * a * c;
             long double delta_upper = input_polynomial_I[1].upper() * input_polynomial_I[1].upper() - 4 * input_polynomial_I[0].upper() * input_polynomial_I[2].upper();
-            Interval delta = Interval(delta_lower, delta_upper);
+            cout<<delta_lower<<" "<<delta_upper<<endl;
+            Interval delta = createIntervals({delta_lower, delta_upper})[0];
+            cout<< "debug 3 "<<endl;
             if (interval_includes_zero(delta)) {
                 Interval root = -input_polynomial_I[1] / (Interval(2.0) * input_polynomial_I[0]);
                 cout << "The polynomial is of degree 2. The 2 same roots: ";
