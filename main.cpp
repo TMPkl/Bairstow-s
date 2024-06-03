@@ -73,13 +73,29 @@ Interval input_single_variable_I(const char variable) {
     return Interval(std::nextafter(u_n, -numeric_limits<long double>::infinity()), std::nextafter(u_n, numeric_limits<long double>::infinity()));
 }
 
-bool interval_includes_zero(const Interval& interval) {
-    return interval.lower() <= 0 && interval.upper() >= 0;
+bool interval_includes_zero(const Interval& interval,long double precision) {
+    return interval.lower()-precision <= 0 && interval.upper()+precision >= 0;
 }
 
 void BarSInterval() {
     vector<long double> input_polynomial = input_single_interval_polynomial();
     vector<Interval> input_polynomial_I = createIntervals(input_polynomial);
+
+    long double precision; 
+    int max_iter;
+    
+    cout << "Enter the precision: ";
+    cin >> precision;
+    cout << "Enter the maximum number of iterations: ";
+    cin >> max_iter;
+
+    if (precision == -1) {
+        precision = 0;
+    }
+
+    if (max_iter == -1) {
+        max_iter = 10e+6;
+    }
 
     cout << std::setprecision(21) << scientific;  // Set the precision to 21 decimal places
 
@@ -90,7 +106,7 @@ void BarSInterval() {
     vector<Interval> c;
 
 
-    while (true) {
+    while (true && max_iter--) {
         size_t degree = input_polynomial_I.size() - 1;
         if (degree == 0) {
             //cout << "The polynomial is of degree 0." << endl;
@@ -129,7 +145,7 @@ void BarSInterval() {
         } else {
             b = synthetic_division_I(input_polynomial_I, u, v);
      
-            if (interval_includes_zero(b[b.size()-1]) && interval_includes_zero(b[b.size()-2])) {
+            if (interval_includes_zero(b[b.size()-1],precision) && interval_includes_zero(b[b.size()-2],precision)) {
                 //cout << "Last 2 coefficients are zero." << endl;
 
                 if (u.lower()*u.lower() + 4*v.lower() < 0)
