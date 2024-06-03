@@ -96,7 +96,6 @@ int main() {
     cout << "v = [" << v.lower() << ", " << v.upper() << "]" << endl;
 
     while (true) {
-        cout<< "debug 1 "<<endl;
         if (input_polynomial_I.size() == 1) {
             cout << "The polynomial is of degree 0." << endl;
             break;
@@ -104,7 +103,6 @@ int main() {
             cout << "The polynomial is of degree 1. The root is: " << -input_polynomial_I[1].lower() / input_polynomial_I[0].lower() << endl;
             break;
         } else if (input_polynomial_I.size() == 3) {
-            cout<< "debug 2 "<<endl;
 
             long double a = input_polynomial_I[0].lower();
             long double b = input_polynomial_I[1].lower();
@@ -113,7 +111,6 @@ int main() {
             long double delta_upper = input_polynomial_I[1].upper() * input_polynomial_I[1].upper() - 4 * input_polynomial_I[0].upper() * input_polynomial_I[2].upper();
             cout<<delta_lower<<" "<<delta_upper<<endl;
             Interval delta = createIntervals({delta_lower, delta_upper})[0];
-            cout<< "debug 3 "<<endl;
             if (interval_includes_zero(delta)) {
                 Interval root = -input_polynomial_I[1] / (Interval(2.0) * input_polynomial_I[0]);
                 cout << "The polynomial is of degree 2. The 2 same roots: ";
@@ -137,13 +134,39 @@ int main() {
             break;
         } else {
             vector<Interval> b = synthetic_divison_I(input_polynomial_I, u, v);
-            print_interval(b);
+            //print_interval(b);
 
             if (interval_includes_zero(b[b.size()-1]) && interval_includes_zero(b[b.size()-2])) {
                 cout << "Last 2 coefficients are zero." << endl;
+                //Interval root1 = (u + sqrt(u*u + Interval(4,4)*v ))*0.5;
+                //Interval root2 = (u - sqrt(u*u + Interval(4,4)*v ))*0.5;
+                
                 break;
             } else {
-                input_polynomial_I = b;
+                // input_polynomial_I = b;
+                vector<Interval> c = synthetic_divison_I(b, u, v);
+                print_interval(c);
+                long double del_u_low = (b[b.size()-1].lower()*c[c.size()-4].lower() - b[b.size()-2].lower()*c[c.size()-3].lower())/(c[c.size()-3].lower()*c[c.size()-3].lower()-c[c.size()-2].lower()*c[c.size()-4].lower());
+                long double del_u_up = (b[b.size()-1].upper()*c[c.size()-4].upper() - b[b.size()-2].upper()*c[c.size()-3].upper())/(c[c.size()-3].upper()*c[c.size()-3].upper()-c[c.size()-2].upper()*c[c.size()-4].upper());
+
+                long double del_v_low = (b[b.size()-2].lower()*c[c.size()-2].lower() - b[b.size()-1].lower()*c[c.size()-3].lower())/(c[c.size()-3].lower()*c[c.size()-3].lower()-c[c.size()-2].lower()*c[c.size()-4].lower());                 
+                long double del_v_up = (b[b.size()-2].upper()*c[c.size()-2].upper() - b[b.size()-1].upper()*c[c.size()-3].upper())/(c[c.size()-3].upper()*c[c.size()-3].upper()-c[c.size()-2].upper()*c[c.size()-4].upper());
+
+                Interval del_u;
+                Interval del_v;
+
+                if(del_u_low < del_u_up)
+                del_u = Interval(del_u_low, del_u_up);
+                else
+                del_u = Interval(del_u_up, del_u_low);
+                
+                if(del_v_low < del_v_up)
+                del_v = Interval(del_v_low, del_v_up);
+                else
+                del_v = Interval(del_v_up, del_v_low);
+                
+                u = u + del_u;
+                v = v + del_v;
             }
         }
     }
