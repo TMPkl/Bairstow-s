@@ -139,29 +139,12 @@ int main() {
      
             if (interval_includes_zero(b[b.size()-1]) && interval_includes_zero(b[b.size()-2])) {
                 cout << "Last 2 coefficients are zero." << endl;
-
-                if (u.lower()*u.lower() + 4*v.lower() < 0)
-                {
-                    cout << "2 complex roots: ";
-                    Interval root1real = -u / (Interval(2.0));
-                    Interval root1imaginary = sqrt(-u*u - 4*v) / (Interval(2.0));
-                    Interval root2real = root1real;
-                    Interval root2imaginary = -root1imaginary;
-                    cout << "Root 1: [" << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
-                    cout << "Root 2: [" << root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
-                    break;
-                }
-                else 
-                {
-                    cout << "2 real roots: ";
-                    Interval root1 = (u + sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
-                    Interval root2 = (u - sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
-                    cout << "The 2 roots are: \n";
-                    print_interval({root1});
-                    print_interval({root2});
-                    input_polynomial_I = vector<Interval>(b.begin(), b.end() - 2);
-                    break;
-                }
+                Interval root1 = (u + sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
+                Interval root2 = (u - sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
+                cout << "The 2 roots are: \n";
+                print_interval({root1});
+                print_interval({root2});
+                input_polynomial_I = vector<Interval>(b.begin(), b.end() - 2);
             } else {
 
                 c = synthetic_divison_I(b, u, v);
