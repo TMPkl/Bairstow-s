@@ -92,6 +92,8 @@ int main() {
     Interval u = input_single_variable_I('u');
     Interval v = input_single_variable_I('v');
 
+    vector<Interval> b;
+    vector<Interval> c;
     cout << "u = [" << u.lower() << ", " << u.upper() << "]" << endl;
     cout << "v = [" << v.lower() << ", " << v.upper() << "]" << endl;
 
@@ -106,8 +108,8 @@ int main() {
 
             long double a = input_polynomial_I[0].lower();
             long double b = input_polynomial_I[1].lower();
-            long double c = input_polynomial_I[2].lower();
-            long double delta_lower = b * b - 4 * a * c;
+            long double c_ = input_polynomial_I[2].lower();
+            long double delta_lower = b * b - 4 * a * c_;
             long double delta_upper = input_polynomial_I[1].upper() * input_polynomial_I[1].upper() - 4 * input_polynomial_I[0].upper() * input_polynomial_I[2].upper();
             cout<<delta_lower<<" "<<delta_upper<<endl;
             Interval delta = createIntervals({delta_lower, delta_upper})[0];
@@ -133,19 +135,21 @@ int main() {
             }
             break;
         } else {
-            vector<Interval> b = synthetic_divison_I(input_polynomial_I, u, v);
+            b = synthetic_divison_I(input_polynomial_I, u, v);
             //print_interval(b);
 
             if (interval_includes_zero(b[b.size()-1]) && interval_includes_zero(b[b.size()-2])) {
                 cout << "Last 2 coefficients are zero." << endl;
-                //Interval root1 = (u + sqrt(u*u + Interval(4,4)*v ))*0.5;
-                //Interval root2 = (u - sqrt(u*u + Interval(4,4)*v ))*0.5;
-                
-                break;
+                Interval root1 = (u + sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
+                Interval root2 = (u - sqrt(u*u + Interval(4,4)*v ))*Interval(0.5,0.5);
+                cout << "The 2 roots are: \n";
+                print_interval({root1});
+                print_interval({root2});
+                input_polynomial_I = vector<Interval>(b.begin(), b.end() - 2);
             } else {
                 // input_polynomial_I = b;
-                vector<Interval> c = synthetic_divison_I(b, u, v);
-                print_interval(c);
+                 c = synthetic_divison_I(b, u, v);
+                //print_interval(c);
                 long double del_u_low = (b[b.size()-1].lower()*c[c.size()-4].lower() - b[b.size()-2].lower()*c[c.size()-3].lower())/(c[c.size()-3].lower()*c[c.size()-3].lower()-c[c.size()-2].lower()*c[c.size()-4].lower());
                 long double del_u_up = (b[b.size()-1].upper()*c[c.size()-4].upper() - b[b.size()-2].upper()*c[c.size()-3].upper())/(c[c.size()-3].upper()*c[c.size()-3].upper()-c[c.size()-2].upper()*c[c.size()-4].upper());
 
@@ -167,6 +171,8 @@ int main() {
                 
                 u = u + del_u;
                 v = v + del_v;
+                //cout << "u = [" << u.lower() << ", " << u.upper() << "]" << endl;
+                //cout << "v = [" << v.lower() << ", " << v.upper() << "]" << endl;
             }
         }
     }
