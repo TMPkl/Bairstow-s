@@ -83,18 +83,21 @@ void BarSInterval() {
 
     long double precision; 
     int max_iter;
+    int max_iter_in;
     
     cout << "Enter the precision: ";
     cin >> precision;
     cout << "Enter the maximum number of iterations: ";
-    cin >> max_iter;
+    cin >> max_iter_in;
 
     if (precision == -1) {
         precision = 0;
     }
-
-    if (max_iter == -1) {
+    if (max_iter_in == -1) {
         max_iter = 10e+6;
+    }
+    else {
+        max_iter = max_iter_in;
     }
 
     cout << std::setprecision(21) << scientific;  // Set the precision to 21 decimal places
@@ -147,7 +150,7 @@ void BarSInterval() {
      
             if (interval_includes_zero(b[b.size()-1],precision) && interval_includes_zero(b[b.size()-2],precision)) {
                 //cout << "Last 2 coefficients are zero." << endl;
-
+                max_iter = max_iter_in;
                 if (u.lower()*u.lower() + 4*v.lower() < 0)
                 {
                     Interval root1real = -u / (Interval(2.0,2.0));
