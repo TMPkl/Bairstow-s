@@ -1,5 +1,9 @@
 #ifndef TEST_H
 #define TEST_H
+#include <boost/numeric/interval.hpp>
+using namespace boost::numeric;
+typedef interval<long double> Interval;
+
 long double convertToNearestLower_(long double num);   // convert to nearest lower or stay the same if there is valid binary representatnion for the number
 long double convertToNearestHigher_(long double num);   // convert to nearest higher or stay the same if there is valid binary representatnion for the number
  

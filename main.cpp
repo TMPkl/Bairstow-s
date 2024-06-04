@@ -10,6 +10,8 @@ using namespace boost::numeric;
 
 typedef interval<long double> Interval;
 
+#define COUT_PRECISION 21
+
 vector<Interval> createIntervals(const vector<long double>& input_polynomial) {
     vector<Interval> intervals;
     for (const auto& val : input_polynomial) {
@@ -99,8 +101,6 @@ void BarSInterval() {
     else {
         max_iter = max_iter_in;
     }
-
-    cout << std::setprecision(21) << scientific;  // Set the precision to 21 decimal places
 
     Interval u = interval<long double>(2.0, 2.0);
     Interval v = interval<long double>(-10.0, -10.0);
@@ -197,13 +197,16 @@ void BarSInterval() {
 
 
 int main(){
-    BarSInterval();
+    cout << std::setprecision(COUT_PRECISION) << scientific;  // Set the precision to 21 decimal places
+
+    //BarSInterval();
     long double x;
     cin >> x;
     long double x_l = convertToNearestLower_(x);
     long double x_h = convertToNearestHigher_(x);
 
     cout << x <<" "<<x_l << " " <<x_h<< endl;
-    
+    interval test = input_interval2interval();
+    cout << test.lower() << " " << test.upper() << endl;
     return 0;
 }
