@@ -39,25 +39,25 @@ vector<long double> input_single_interval_polynomial() {
     return input_polynomial;
 }
 
-void print_interval(const vector<Interval>& intervals) {
-    for (const auto& interval : intervals) {
-        cout <<"[" << interval.lower() << ", " << interval.upper() << "]" << endl<<scientific;
-    }
-}
+// void print_interval(const vector<Interval>& intervals) {
+//     for (const auto& interval : intervals) {
+//         cout <<"[" << interval.lower() << ", " << interval.upper() << "]" << endl<<scientific;
+//     }
+// } in mylib files 
 
-vector<Interval> synthetic_division_I(const vector<Interval>& intervals, const Interval& u, const Interval& v) {
-    vector<Interval> results;
-    for (size_t i = 0; i < intervals.size(); ++i) {
-        if (i == 0) {
-            results.push_back(intervals[i]);
-        } else if (i == 1) {
-            results.push_back(intervals[i] + results[i-1] * u);
-        } else {
-            results.push_back(intervals[i] + results[i-1] * u + results[i-2] * v);
-        }
-    }
-    return results;
-}
+// vector<Interval> synthetic_division_I(const vector<Interval>& intervals, const Interval& u, const Interval& v) {
+//     vector<Interval> results;
+//     for (size_t i = 0; i < intervals.size(); ++i) {
+//         if (i == 0) {
+//             results.push_back(intervals[i]);
+//         } else if (i == 1) {
+//             results.push_back(intervals[i] + results[i-1] * u);
+//         } else {
+//             results.push_back(intervals[i] + results[i-1] * u + results[i-2] * v);
+//         }
+//     }
+//     return results;
+// } in mylib files
 
 Interval input_single_variable_I(const char variable) {
     long double u_n;
@@ -75,38 +75,25 @@ Interval input_single_variable_I(const char variable) {
     return Interval(std::nextafter(u_n, -numeric_limits<long double>::infinity()), std::nextafter(u_n, numeric_limits<long double>::infinity()));
 }
 
-bool interval_includes_zero(const Interval& interval,long double precision) {
-    return interval.lower()-precision <= 0 && interval.upper()+precision >= 0;
-}
+// bool interval_includes_zero(const Interval& interval,long double precision) {
+//     return interval.lower()-precision <= 0 && interval.upper()+precision >= 0;
+// }
 
 void BarSInterval() {
     vector<long double> input_polynomial = input_single_interval_polynomial();
     vector<Interval> input_polynomial_I = createIntervals(input_polynomial);
 
-    long double precision; 
-    int max_iter;
-    int max_iter_in;
-    
-    cout << "Enter the precision: ";
-    cin >> precision;
-    cout << "Enter the maximum number of iterations: ";
-    cin >> max_iter_in;
 
-    if (precision == -1) {
-        precision = 0;
-    }
-    if (max_iter_in == -1) {
-        max_iter = 10e+6;
-    }
-    else {
-        max_iter = max_iter_in;
-    }
 
     Interval u = interval<long double>(2.0, 2.0);
     Interval v = interval<long double>(-10.0, -10.0);
 
     vector<Interval> b;
     vector<Interval> c;
+
+    int max_iter = getMaxIterations();
+    int max_iter_in = max_iter;
+    long double precision = getPrecision();
 
 
     while (true && max_iter--) {
@@ -115,12 +102,12 @@ void BarSInterval() {
             //cout << "The polynomial is of degree 0." << endl;
             break;
         } else if (degree == 1) {
-            cout << -input_polynomial_I[1].lower() / input_polynomial_I[0].lower() << endl;
+            print_interval({input_polynomial_I[0]});
             break;
         } else if (degree == 2) {
-            long double a = input_polynomial_I[0].lower();
-            long double b = input_polynomial_I[1].lower();
-            long double c_ = input_polynomial_I[2].lower();
+            long double a = input_polynomial_I[0].upper();
+            long double b = input_polynomial_I[1].lower(); // sprawdzam czy pierwiastek jest rzeczywisty dla skrajnego przypadku delty (b małe a i c duże)
+            long double c_ = input_polynomial_I[2].upper();
             long double delta = b * b - 4 * a * c_;
 
             if (delta > 0) {
@@ -196,17 +183,20 @@ void BarSInterval() {
 }
 
 
+
 int main(){
     cout << std::setprecision(COUT_PRECISION) << scientific;  // Set the precision to 21 decimal places
 
     //BarSInterval();
-    long double x;
-    cin >> x;
-    long double x_l = convertToNearestLower_(x);
-    long double x_h = convertToNearestHigher_(x);
 
-    cout << x <<" "<<x_l << " " <<x_h<< endl;
-    interval test = input_interval2interval();
-    cout << test.lower() << " " << test.upper() << endl;
+    // long double x;
+    // cin >> x;
+    // long double x_l = convertToNearestLower_(x);
+    // long double x_h = convertToNearestHigher_(x);
+
+    // cout << x <<" "<<x_l << " " <<x_h<< endl;
+    // interval test = input_interval2interval();
+    // cout << test.lower() << " " << test.upper() << endl;
+    BarInterval2Interval();
     return 0;
 }
