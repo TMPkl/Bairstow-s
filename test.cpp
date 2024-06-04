@@ -1,30 +1,32 @@
 #include <iostream>
-#include <string>
-#include <sstream>
-#include <iomanip>
+#include <cfenv>
+#include <cmath>
 #include <limits>
-#include <cmath> // Include cmath for std::nextafter
 
-using namespace std;
+long double convertToNearestLower(long double num) {
+    int originalRoundingMode = std::fegetround();
 
-long double lower_bounder(long double original) {
-    string str = to_string(original);
-    stringstream ss;
-    ss << std::setprecision(21) << str;
-    long double converted;
-    ss >> converted;
+    std::fesetround(FE_DOWNWARD);
 
-    if (original == converted) {
-        return original;
-    } else {
-        return std::nextafter(original, -numeric_limits<long double>::infinity()); // trzeba odejmować tak długo jakż licczba nie będzie mniejsza bo czasami zaokrągla bardzije w w górę niż się chce 
+    long double lower = std::nextafter(num, -std::numeric_limits<long double>::infinity());
+
+    if (num != lower) {
+        num = lower;
     }
+    std::fesetround(originalRoundingMode);
+
+    return num;
 }
 
 int main() {
-    long double x;
-    cout << setprecision(21)<<scientific;
-    cin >> x;
-    cout << lower_bounder(x) << endl;
+    long double num;
+    std::cin >> num;
+    long double lowerNum = convertToNearestLower(num);
+
+    std::cout << std::fixed << std::setprecision(30);
+    
+    std::cout << "Original number: " << num << std::endl;
+    std::cout << "Nearest lower or equal representable number: " << lowerNum << std::endl;
+
     return 0;
 }
