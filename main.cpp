@@ -4,7 +4,7 @@
 #include <limits>
 #include <iomanip>
 #include <cmath>
-
+#include "mylib.h"
 using namespace std;
 using namespace boost::numeric;
 
@@ -198,5 +198,12 @@ void BarSInterval() {
 
 int main(){
     BarSInterval();
+    long double x;
+    cin >> x;
+    long double x_l = convertToNearestLower_(x);
+    long double x_h = convertToNearestHigher_(x);
+
+    cout << x <<" "<<x_l << " " <<x_h<< endl;
+    
     return 0;
 }
