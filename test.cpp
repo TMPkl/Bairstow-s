@@ -17,7 +17,7 @@ long double lower_bounder(long double original) {
     if (original == converted) {
         return original;
     } else {
-        return std::nextafter(original, -numeric_limits<long double>::infinity());
+        return std::nextafter(original, -numeric_limits<long double>::infinity()); // trzeba odejmować tak długo jakż licczba nie będzie mniejsza bo czasami zaokrągla bardzije w w górę niż się chce 
     }
 }
 
