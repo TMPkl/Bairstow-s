@@ -98,6 +98,20 @@ void getInputParameters(long double& precision, int& max_iter) {
     max_iter = getMaxIterations();
 }
 
+vector<Interval> getInputPolyI2I() {
+        std::cout << "Enter the intervals of polynomial coefficients starting from X^n to X^0. Enter any other character to stop. Make sure to write it in correct order!" << std::endl;
+        Interval input;
+        vector<Interval> polynomial;
+        while (true) {
+            try {
+                input = input_interval2interval();
+            } catch (const std::invalid_argument& e) {
+                break;
+            }
+            polynomial.push_back(input);
+        }
+        return polynomial;
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////prints////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,27 +122,16 @@ void print_interval(const vector<Interval>& intervals) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
 
-void BarInterval2Interval(){
-    std::cout << "Enter the intervals of polynomial coefficients starting from X^n to X^0. Enter any other character to stop. Make shure to write it in correct order!" << std::endl;
-    Interval input;
-    vector<Interval> polynomial;
-    while (true) {
-        try {
-            input = input_interval2interval();
-        } catch (const std::invalid_argument& e) {
-            break;
-        }
-        polynomial.push_back(input);
-    }
+void BarInterval2Interval(long double precision,int max_iter,vector<Interval> polynomial){
+    
+
     Interval u = interval<long double>(2.0, 2.0);
     Interval v = interval<long double>(-10.0, -10.0);
 
     vector<Interval> b;
     vector<Interval> c;
 
-    int max_iter = getMaxIterations();
     int max_iter_in = max_iter;
-    long double precision = getPrecision();
 
     while(max_iter--){
         size_t degree = polynomial.size() - 1;
@@ -161,8 +164,8 @@ void BarInterval2Interval(){
                 Interval root2real = root1real;
                 Interval root2imaginary = -root1imaginary;
                 //cout << "The polynomial is of degree 2. The 2 complex roots: ";
-                cout << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
-                cout << root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
+                cout << "[" << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
+                cout << "[" <<root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
             }
             break;
         }else {

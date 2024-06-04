@@ -16,12 +16,12 @@ Interval input_interval2interval();   // create Interval object from input that 
 long double getPrecision();   // get the precision from the user
 int getMaxIterations();   // get the max iterations from the user
 void getInputParameters(long double& precision, int& max_iter);
-
+vector<Interval> getInputPolyI2I();
 //prints
 void print_interval(const vector<Interval>& intervals);   // print the interval/s
 
 
 
-void BarInterval2Interval();   // main function, on Interval input 
+void BarInterval2Interval(long double precision,int max_iter,vector<Interval> polynomial);   // main function, on Interval input 
 void BarFloat ();   // main function, on float input
 #endif
