@@ -66,15 +66,16 @@ void BarSInterval(long double precision, int max_iter, vector<Interval> input_po
     //long double precision = getPrecision();
 
     int const max_iter_in = max_iter;
-    while (true && max_iter--) {
+    while (true) {
+        max_iter--;
         size_t degree = input_polynomial_I.size() - 1;
-        if (degree == 0) {
+        if (degree == 0 || max_iter == 0) {
             //cout << "The polynomial is of degree 0." << endl;
             break;
-        } else if (degree == 1) {
+        } else if (degree == 1 || max_iter == 0) {
             print_interval({input_polynomial_I[0]});
             break;
-        } else if (degree == 2) {
+        } else if (degree == 2 || max_iter == 0) {
             long double a = input_polynomial_I[0].upper();
             long double b = input_polynomial_I[1].lower(); // sprawdzam czy pierwiastek jest rzeczywisty dla skrajnego przypadku delty (b małe a i c duże)
             long double c_ = input_polynomial_I[2].upper();
@@ -105,9 +106,11 @@ void BarSInterval(long double precision, int max_iter, vector<Interval> input_po
         } else {
             b = synthetic_division_I(input_polynomial_I, u, v);
      
-            if (interval_includes_zero(b[b.size()-1],precision) && interval_includes_zero(b[b.size()-2],precision)) {
+            if ((interval_includes_zero(b[b.size()-1],precision) && interval_includes_zero(b[b.size()-2],precision)) || max_iter == 0) 
+            {
                 //cout << "Last 2 coefficients are zero." << endl;
-                max_iter = max_iter_in;
+                if(max_iter != 0)
+                    max_iter = max_iter_in;
                 if (u.lower()*u.lower() + 4*v.lower() < 0)
                 {
                     Interval root1real = -u / (Interval(2.0,2.0));
@@ -132,6 +135,8 @@ void BarSInterval(long double precision, int max_iter, vector<Interval> input_po
                     input_polynomial_I = vector<Interval>(b.begin(), b.end() - 2);
 
                 }
+                if (!max_iter)
+                    break;
             } else {
 
                 c = synthetic_division_I(b, u, v);

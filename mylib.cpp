@@ -133,14 +133,15 @@ void BarInterval2Interval(long double precision,int max_iter,vector<Interval> po
 
     int max_iter_in = max_iter;
 
-    while(max_iter--){
+    while(true){
+        max_iter--;
         size_t degree = polynomial.size() - 1;
-        if (degree == 0) {
+        if (degree == 0|| max_iter == 0) {
             break;
-        } else if (degree == 1){
+        } else if (degree == 1|| max_iter == 0) {
             print_interval({polynomial[0]});
             break;
-        } else if (degree == 2){
+        } else if (degree == 2|| max_iter == 0){
             long double a = polynomial[0].upper();
             long double b = polynomial[1].lower(); // sprawdzam czy pierwiastek jest rzeczywisty dla skrajnego przypadku delty (b małe a i c duże)
             long double c_ = polynomial[2].upper();
@@ -171,11 +172,13 @@ void BarInterval2Interval(long double precision,int max_iter,vector<Interval> po
         }else {
             b = synthetic_division_I(polynomial, u, v);
      
-            if (interval_includes_zero(b[b.size()-1],precision) && interval_includes_zero(b[b.size()-2],precision)) {
+            if ((interval_includes_zero(b[b.size()-1],precision) && interval_includes_zero(b[b.size()-2],precision))|| max_iter == 0) {
                 //cout << "Last 2 coefficients are zero." << endl;
                 max_iter = max_iter_in;
                 if (u.lower()*u.lower() + 4*v.lower() < 0)
                 {
+                    if(max_iter != 0)
+                        max_iter = max_iter_in;
                     Interval root1real = -u / (Interval(2.0,2.0));
                     Interval root1imaginary = sqrt(-u*u - Interval(4.0,4.0)*v) / (Interval(2.0,2.0));
                     Interval root2real = root1real;
@@ -197,6 +200,9 @@ void BarInterval2Interval(long double precision,int max_iter,vector<Interval> po
                     print_interval({root2});
                     polynomial = vector<Interval>(b.begin(), b.end() - 2);
 
+                }
+                if (!max_iter) {
+                    break;
                 }
             } else {
 
