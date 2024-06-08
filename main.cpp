@@ -10,7 +10,7 @@ using namespace boost::numeric;
 
 typedef interval<long double> Interval;
 
-#define COUT_PRECISION 21
+#define COUT_PRECISION 15
 
 vector<Interval> createIntervals(const vector<long double>& input_polynomial) {
     vector<Interval> intervals;
@@ -53,19 +53,14 @@ vector<long double> input_single_interval_polynomial() {
 //     return Interval(std::nextafter(u_n, -numeric_limits<long double>::infinity()), std::nextafter(u_n, numeric_limits<long double>::infinity()));
 // }
 void BarSInterval(long double precision, int max_iter, vector<Interval> input_polynomial_I)  {
-   
-
     Interval u = interval<long double>(2.0, 2.0);
     Interval v = interval<long double>(-10.0, -10.0);
 
     vector<Interval> b;
     vector<Interval> c;
 
-    //int max_iter = getMaxIterations();
-    
-    //long double precision = getPrecision();
-
     int const max_iter_in = max_iter;
+    
     while (true) {
         max_iter--;
         size_t degree = input_polynomial_I.size() - 1;
@@ -85,12 +80,10 @@ void BarSInterval(long double precision, int max_iter, vector<Interval> input_po
                 Interval sqrt_delta = sqrt(Interval(delta));
                 Interval root1 = (-input_polynomial_I[1] - sqrt_delta) / (Interval(2.0) * input_polynomial_I[0]);
                 Interval root2 = (-input_polynomial_I[1] + sqrt_delta) / (Interval(2.0) * input_polynomial_I[0]);
-                //cout << "The polynomial is of degree 2. The 2 distinct roots: ";
                 print_interval({root1});
                 print_interval({root2});
             } else if (delta == 0) {
                 Interval root = -input_polynomial_I[1] / (Interval(2.0) * input_polynomial_I[0]);
-                //cout << "The polynomial is of degree 2. The 2 same roots: ";
                 print_interval({root});
                 print_interval({root});
             } else {
@@ -169,7 +162,7 @@ int Bar(){
     int max_iter = getMaxIterations();
     if (choice == 'f')
     {
-        /* code */
+        BarLongDouble(precision, max_iter, input_single_interval_polynomial());
     }
     else if (choice == 's')
     {

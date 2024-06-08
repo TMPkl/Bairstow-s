@@ -23,5 +23,5 @@ void print_interval(const vector<Interval>& intervals);   // print the interval/
 
 
 void BarInterval2Interval(long double precision,int max_iter,vector<Interval> polynomial);   // main function, on Interval input 
-void BarFloat ();   // main function, on float input
+void BarLongDouble(long double precision, int max_iter, vector<long double> polynomial);   // main function, on long double input
 #endif

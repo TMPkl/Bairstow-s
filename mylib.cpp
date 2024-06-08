@@ -52,10 +52,27 @@ vector<Interval> synthetic_division_I(const vector<Interval>& intervals, const I
     }
     return results;
 }
+vector<long double> synthetic_division(const vector<long double>& coefficients, long double u, long double v) {
+    vector<long double> results;
+    for (size_t i = 0; i < coefficients.size(); ++i) {
+        if (i == 0) {
+            results.push_back(coefficients[i]);
+        } else if (i == 1) {
+            results.push_back(coefficients[i] + results[i-1] * u);
+        } else {
+            results.push_back(coefficients[i] + results[i-1] * u + results[i-2] * v);
+        }
+    }
+    return results;
+}
 
 
 bool interval_includes_zero(const Interval& interval,long double precision) {
     return interval.lower()-precision <= 0 && interval.upper()+precision >= 0;
+}
+
+bool includes_zero(const vector<long double>& coefficients, long double precision) {
+    return coefficients[coefficients.size()-1]-precision <= 0 && coefficients[coefficients.size()-1]+precision >= 0 && coefficients[coefficients.size()-2]-precision <= 0 && coefficients[coefficients.size()-2]+precision >= 0;
 }
 
 ///////////////inputs////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +88,22 @@ Interval input_interval2interval(){
         throw std::invalid_argument("Invalid interval");
     }
     return Interval(convertToNearestLower_(lower), convertToNearestHigher_(upper));
+}
+vector<long double> input_floating_polynomial() {
+    cout << "Enter the values of the coefficients starting from X^n to X^0. Enter any other character to stop." << endl;
+    vector<long double> input_polynomial;
+    while (true) {
+        long double x;
+        cout << "Enter a value for the polynomial (or any other character to stop): ";
+        cin >> x;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            break;
+        }
+        input_polynomial.push_back(x);
+    }
+    return input_polynomial;
 }
 
 long double getPrecision() {
@@ -119,8 +152,98 @@ void print_interval(const vector<Interval>& intervals) {
     for (const auto& interval : intervals) {
         cout <<"[" << interval.lower() << ", " << interval.upper() << "]" << endl<<scientific;
     }}
-////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////    
+void BarLongDouble(long double precision, int max_iter, vector<long double> polynomial) {
+    long double u = 2.0;
+    long double v = -10.0;
+
+    if(precision == 0){
+        precision =  1e-20L;
+    }
+
+    vector<long double> b;
+    vector<long double> c;
+
+    int const max_iter_in = max_iter;
+
+    while (true) {
+        max_iter--;
+        size_t degree = polynomial.size() - 1;
+        if (degree == 0 || max_iter == 0) {
+            //cout << "The polynomial is of degree 0." << endl;
+            break;
+        } else if (degree == 1 || max_iter == 0) {
+           // cout << "The polynomial is of degree 1." << endl;
+            cout <<  polynomial[0] << endl;
+            break;
+        } else if (degree == 2 || max_iter == 0) {
+            long double a = polynomial[0];
+            long double b = polynomial[1];
+            long double c_ = polynomial[2];
+            long double delta = b * b - 4 * a * c_;
+
+            if (delta > 0) {
+                long double root1 = (-b - sqrt(delta)) / (2 * a);
+                long double root2 = (-b + sqrt(delta)) / (2 * a);
+                //cout << "The polynomial is of degree 2. The 2 distinct roots: ";
+                cout  << root1 << endl;
+                cout  << root2 << endl;
+            } else if (delta == 0) {
+                long double root = -b / (2 * a);
+                //cout << "The polynomial is of degree 2. The 2 same roots: ";
+                cout <<  root << endl;
+                cout <<  root << endl;
+            } else {
+                long double root1real = -b / (2 * a);
+                long double root1imaginary = sqrt(-delta) / (2 * a);
+                long double root2real = root1real;
+                long double root2imaginary = -root1imaginary;
+                //cout << "The polynomial is of degree 2. The 2 complex roots: ";
+                cout << "[" << root1real << " + " << root1imaginary << "i]" << endl;
+                cout << "[" << root2real << " + " << root2imaginary << "i]" << endl;
+            }
+            break;
+        } else {
+            b = synthetic_division(polynomial, u, v);
+            if (includes_zero(b, precision) || max_iter == 0) {
+                //cout << "Last 2 coefficients are zero." << endl;
+                max_iter = max_iter_in;
+                if (u*u + 4*v < 0) {
+                    if (max_iter != 0) {
+                        max_iter = max_iter_in;
+                    }
+                    long double root1real = -u / 2;
+                    long double root1imaginary = sqrt(-u*u - 4*v) / 2;
+                    long double root2real = root1real;
+                    long double root2imaginary = -root1imaginary;
+                    cout << "[" << root1real << " + " << root1imaginary << "i]" << endl;
+                    cout << "[" << root2real << " + " << root2imaginary << "i]" << endl;
+                    polynomial = vector<long double>(b.begin(), b.end() - 2);
+                } else {
+                    //cout << "2 real roots: ";
+                    long double root1 = (u + sqrt(u*u + 4*v ))/2;
+                    long double root2 = (u - sqrt(u*u + 4*v ))/2;
+                    //cout << "The 2 roots are: \n";
+                    //cout << "root 1:";
+                    cout << root1 << endl;
+                    //cout << "root 2:";
+                    cout << root2 << endl;
+                    polynomial = vector<long double>(b.begin(), b.end() - 2);
+                }
+                if (!max_iter) {
+                    break;
+                }
+            } else {
+                c = synthetic_division(b, u, v);
+                long double del_u = (b[b.size()-1]*c[c.size()-4] - b[b.size()-2]*c[c.size()-3])/(c[c.size()-3]*c[c.size()-3]-c[c.size()-2]*c[c.size()-4]);
+                long double del_v = (b[b.size()-2]*c[c.size()-2] - b[b.size()-1]*c[c.size()-3])/(c[c.size()-3]*c[c.size()-3]-c[c.size()-2]*c[c.size()-4]);
+                u += del_u;
+                v += del_v;
+            }
+        }
+    }
+}
 
 void BarInterval2Interval(long double precision,int max_iter,vector<Interval> polynomial){
     
