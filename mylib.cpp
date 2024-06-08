@@ -4,12 +4,14 @@
 #include <cfenv>
 #include <cmath>
 #include <limits>
+#include <iomanip>
 #include "mylib.h"
 
 using namespace boost::numeric;
 using namespace std;
 typedef interval<long double> Interval;
 
+#define COUT_PRECISION 15
 
 long double convertToNearestLower_(long double num) {
     int originalRoundingMode = std::fegetround();
@@ -111,7 +113,7 @@ long double getPrecision() {
     cout << "Enter the precision: ";
     cin >> precision;
     if (precision == -1) {
-        precision = 0;
+        precision = 1e-40L;
     }
     return precision;
 }
@@ -121,7 +123,7 @@ int getMaxIterations() {
     cout << "Enter the maximum number of iterations: ";
     cin >> max_iter;
     if (max_iter == -1) {
-        max_iter = 10e+6;
+        max_iter = std::numeric_limits<int>::max();
     }
     return max_iter;
 }
@@ -150,7 +152,9 @@ vector<Interval> getInputPolyI2I() {
 //////prints////////////////////////////////////////////////////////////////////////////////////////////////////////
 void print_interval(const vector<Interval>& intervals) {
     for (const auto& interval : intervals) {
-        cout <<"[" << interval.lower() << ", " << interval.upper() << "]" << endl<<scientific;
+        cout <<"[" << interval.lower() << ", " << interval.upper() << "]" <<"szerokość: " ;
+        cout << std::setprecision(3) << interval.upper() - interval.lower() << endl << std::scientific;
+        cout << std::setprecision(COUT_PRECISION);
     }}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
