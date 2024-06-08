@@ -113,7 +113,7 @@ long double getPrecision() {
     cout << "Enter the precision: ";
     cin >> precision;
     if (precision == -1) {
-        precision = 1e-40L;
+        precision = 1e-25;
     }
     return precision;
 }
@@ -162,7 +162,7 @@ void BarLongDouble(long double precision, int max_iter, vector<long double> poly
     long double u = 2.0;
     long double v = -10.0;
 
-    if(precision == 0){
+    if(precision == 1e-25){
         precision =  1e-20L;
     }
 
@@ -204,8 +204,8 @@ void BarLongDouble(long double precision, int max_iter, vector<long double> poly
                 long double root2real = root1real;
                 long double root2imaginary = -root1imaginary;
                 //cout << "The polynomial is of degree 2. The 2 complex roots: ";
-                cout << "[" << root1real << " + " << root1imaginary << "i]" << endl;
-                cout << "[" << root2real << " + " << root2imaginary << "i]" << endl;
+                cout << "[" << root1real << " + " << root1imaginary << " i] " << endl;
+                cout << "[" << root2real << " + " << root2imaginary << " i]" << endl;
             }
             break;
         } else {
@@ -292,8 +292,8 @@ void BarInterval2Interval(long double precision,int max_iter,vector<Interval> po
                 Interval root2real = root1real;
                 Interval root2imaginary = -root1imaginary;
                 //cout << "The polynomial is of degree 2. The 2 complex roots: ";
-                cout << "[" << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
-                cout << "[" <<root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
+                cout << "[" << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i " << "width: "<< root1real.upper()-root1real.lower()<<" + "<<root1imaginary.upper()-root1imaginary.lower()<<" i"<< endl;
+                cout << "[" <<root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i " << "width: "<< root2real.upper()-root2real.lower()<<" + "<<root2imaginary.upper()-root2imaginary.lower()<<" i"<< endl;
             }
             break;
         }else {
@@ -310,8 +310,8 @@ void BarInterval2Interval(long double precision,int max_iter,vector<Interval> po
                     Interval root1imaginary = sqrt(-u*u - Interval(4.0,4.0)*v) / (Interval(2.0,2.0));
                     Interval root2real = root1real;
                     Interval root2imaginary = -root1imaginary;
-                    cout << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
-                    cout <<  root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
+                     cout << "[" << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i " << "width: "<< root1real.upper()-root1real.lower()<<" + "<<root1imaginary.upper()-root1imaginary.lower()<<" i"<< endl;
+                    cout << "[" <<root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i " << "width: "<< root2real.upper()-root2real.lower()<<" + "<<root2imaginary.upper()-root2imaginary.lower()<<" i"<< endl;
                     polynomial = vector<Interval>(b.begin(), b.end() - 2);
 
                 }
