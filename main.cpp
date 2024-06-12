@@ -92,8 +92,8 @@ void BarSInterval(long double precision, int max_iter, vector<Interval> input_po
                 Interval root2real = root1real;
                 Interval root2imaginary = -root1imaginary;
                 //cout << "The polynomial is of degree 2. The 2 complex roots: ";
-                cout << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i" << endl;
-                cout << root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i" << endl;
+                cout << "[" << root1real.lower() << ", " << root1real.upper() << "] + [" << root1imaginary.lower() << ", " << root1imaginary.upper() << "]i " << "width: "<< root1real.upper()-root1real.lower()<<" + "<<root1imaginary.upper()-root1imaginary.lower()<<" i"<< endl;
+                cout << "[" <<root2real.lower() << ", " << root2real.upper() << "] + [" << root2imaginary.lower() << ", " << root2imaginary.upper() << "]i " << "width: "<< root2real.upper()-root2real.lower()<<" + "<<root2imaginary.upper()-root2imaginary.lower()<<" i"<< endl;
             }
             break;
         } else {
