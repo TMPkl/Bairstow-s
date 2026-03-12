@@ -1,5 +1,5 @@
-# under constract
-
+dokumentacja, opis projektu
+[Zobacz PDF](doc.pdf)
 
 ## credits to Oscar Veliz for the best explanation I was able to find. 
 
